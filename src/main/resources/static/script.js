@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () { // on dom ready
         $.get("/elements", function (data) {
             cy.elements().remove();
             cy.add( data );
-            cy.layout({ name: 'circle' });
+            cy.layout({ name: 'cose' });
         });
 
     }, 5000);

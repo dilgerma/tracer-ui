@@ -1,6 +1,7 @@
 package de.effectivetrainings.tracer.web;
 
 import de.effectivetrainings.tracer.domain.ServiceCall;
+import de.effectivetrainings.tracer.domain.TimeSpan;
 import de.effectivetrainings.tracer.repository.TracerRepository;
 import de.effectivetrainings.tracer.ui.cytoscape.CytoscapeElementMap;
 import de.effectivetrainings.tracer.ui.cytoscape.mapper.CytoscapeElementMapper;
@@ -25,5 +26,10 @@ public class TracerRestController {
     public CytoscapeElementMap elements() {
         final Set<ServiceCall> calls = tracerRepository.findCalls();
         return cytoscapeElementMapper.map(calls);
+    }
+
+    @RequestMapping("/range")
+    public TimeSpan timeSpan() {
+        return tracerRepository.findTimespan().orElse(null);
     }
 }
