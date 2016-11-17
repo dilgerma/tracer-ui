@@ -6,8 +6,10 @@ import de.effectivetrainings.tracer.repository.TracerRepository;
 import de.effectivetrainings.tracer.ui.cytoscape.CytoscapeElementMap;
 import de.effectivetrainings.tracer.ui.cytoscape.mapper.CytoscapeElementMapper;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,8 +25,8 @@ public class TracerRestController {
     }
 
     @RequestMapping("/elements")
-    public CytoscapeElementMap elements() {
-        final Set<ServiceCall> calls = tracerRepository.findCalls();
+    public CytoscapeElementMap elements(@RequestParam(value = "to") Long to) {
+        final Set<ServiceCall> calls = tracerRepository.findCalls(new Date(to));
         return cytoscapeElementMapper.map(calls);
     }
 

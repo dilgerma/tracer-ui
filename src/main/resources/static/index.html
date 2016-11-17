@@ -1,10 +1,177 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" href="style.css">
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="application/javascript"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/2.7.10/cytoscape.js" type="application/javascript"></script>
-        <script src="script.js" type="application/javascript"></script>
-    </head>
-    <div id="cy"></div>
+<head>
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+<body></body>
+
+</html>
+
+
+<!doctype html>
+<!--[if IE 9]>
+<html class="lt-ie10" lang="en"> <![endif]-->
+<html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{{page.title}}</title>
+
+
+    <meta name="description"
+          content="Update what your Blog is about in this section"/>
+
+    <meta name="author" content="Your name goes here"/>
+    <meta name="copyright" content="Maybe consider a Creative Commons license"/>
+
+    <script src="http://code.jquery.com/jquery-3.1.1.min.js" type="application/javascript"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/cytoscape/2.7.10/cytoscape.js"
+            type="application/javascript"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js" type="text/javascript"></script>-->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.4.1/bootstrap-slider.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.4.1/css/bootstrap-slider.min.css">
+    <script src="http://momentjs.com/downloads/moment-with-locales.js" type="text/javascript"></script>
+
+    <script src="script.js" type="application/javascript"></script>
+    <script src="main.js" type="application/javascript"></script>
+
+</head>
+<body ng-app="tracer">
+
+
+<!-- Nav Bar -->
+<div class="container">
+
+    <div class="row">
+        <nav class="navbar navbar-default top-page">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!--a class="navbar-brand" href="#">Brand</a-->
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <!--<ul class="nav navbar-nav navbar-right"></ul>-->
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <!-- xing -->
+                            <a title="XING" onclick="trackLink(this,'social-media','xing');return false;"
+                               href="http://www.xing.com/profile/Martin_Dilger2" target="_blank" rel="me"><img
+                                    src="http://www.xing.com/img/n/xing_icon_32x32.png" width="32" height="32"
+                                    alt="XING"
+                                    target="_blank"></a></li>
+                        <li>
+                            <!-- gulp -->
+                            <a title="Beraterprofil auf Gulp" href="http://www.gulp.de/Profil/martindilger.html"
+                               target="_blank" onclick="trackLink(this,'social-media','gulp');return false;"
+                               rel="me"><img
+                                    src="http://www.gulp.de/presse/images/bildmaterial/gulp-logo.jpg" height="32"
+                                    alt="Gulp Berater Profil"></a></li>
+                        <li>
+                            <!-- twitter -->
+                            <a title="Twitter" href="http://twitter.com/#!/dilgerma" target="_blank" rel="me"
+                               onclick="trackLink(this,'social-media','twitter');return false;">
+                                <img src="http://effectivetrainings.de/images/twitter.png" width="32"
+                                     height="32"
+                                     alt="Twitter"></a>
+                        <li>
+                            <!-- blog -->
+                            <a title="Blog" href="http://www.effectivetrainings.de/blog/feed"
+                               onclick="trackLink(this,'social-media','blog-feed');return false;" target="_blank"
+                               rel="me"><img src="http://effectivetrainings.de/images/effective/rss.png" width="32"
+                                             height="32"
+                                             alt="Blog RSS"></a>
+
+                        </li>
+                        <li>
+                            <!-- github -->
+                            <a title="Github" href="http://github.com/dilgerma" target="_blank" rel="me"
+                               onclick="trackLink(this,'social-media','github');return false;"><img
+                                    src="http://effectivetrainings.de/images/effective/github.png" width="32"
+                                    height="32"
+                                    alt="GitHub"
+                                    target="_blank"></a>
+                        </li>
+                        <li>
+                            <!-- slideshare -->
+                            <a title="Slideshare" href="http://de.slideshare.net/effectivetrainings"
+                               onclick="trackLink(this,'social-media','slideshare');return false;" target="_blank"
+                               rel="me"><img
+                                    src="http://effectivetrainings.de/images/effective/slideshare.png" width="32"
+                                    height="32"
+                                    alt="Slideshare"></a>
+                        </li>
+                    </ul>
+                    <!--ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">Link</a></li>
+                        </li>
+                    </ul-->
+                </div>
+                <!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+    </div>
+
+
+    <!-- End Nav -->
+
+
+    <!-- Main Page Content and Sidebar -->
+
+    <div class="row">
+
+        <!-- Main Blog Content -->
+        <div class="col-sm-8 blog-main" role="content">
+            <div id="cy" style="width:500px; height: 500px;"></div>
+        </div>
+
+        <!-- End Main Content -->
+
+        <!-- Sidebar -->
+
+        <aside class="col-sm-3 col-sm-offset-1 blog-sidebar">
+            <input id="ex5" type="text" data-slider-min="-5" data-slider-max="20" data-slider-step="1" data-slider-value="0"/>
+        </aside>
+
+        <!-- End Sidebar -->
+    </div>
+    <!-- End Main Content and Sidebar -->
+
+
+    <!-- Footer -->
+
+    <footer class="row">
+        <div class="large-12 columns">
+            <hr/>
+            <div class="row">
+                <div class="large-12 columns">
+                    @2016 - Effective Trainings
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+</body>
 </html>

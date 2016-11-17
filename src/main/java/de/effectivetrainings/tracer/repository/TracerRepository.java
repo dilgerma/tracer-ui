@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class TracerRepository {
 
     public static final String SELECT_ALL_GROUP_BY_TRACE_ID = "select traceId,source,target,\"duration\" from trace group by traceIdTag";
-    public static final String SELECT_SERVICE_CONNECTIONS = "select source, target from trace where source != 'unknown' and target <> 'unknown'";
+    public static final String SELECT_SERVICE_CONNECTIONS = "select source, target from trace where source != 'unknown' and target <> 'unknown' and time < '%s' and type = 'request_inbound'";
 
     //workaround for https://github.com/influxdata/influxdb/issues/5793
     public static final String FIRST_ELEMENT = "select first(\"duration\") from trace";
@@ -49,11 +49,12 @@ public class TracerRepository {
                 .collect(Collectors.toList());
     }
 
-    public Set<ServiceCall> findCalls() {
-        final QueryResult query = influxDB.query(new Query(SELECT_SERVICE_CONNECTIONS, database));
+    public Set<ServiceCall> findCalls(Date to) {
+            final QueryResult query = influxDB.query(new Query(String.format(SELECT_SERVICE_CONNECTIONS, toInfluxDBTimeFormat(to.getTime())), database));
         return query
                 .getResults()
                 .stream()
+                .filter(result -> result.getSeries() != null)
                 .map(QueryResult.Result::getSeries)
                 .flatMap(List::stream)
                 .map(series -> series.getValues())
@@ -112,6 +113,16 @@ public class TracerRepository {
             throw new RuntimeException("unexpected date format", e);
         }
     }
+
+    //TODO upgrade after influxdb-java 2.5 (TimeUtils)
+    public static String toInfluxDBTimeFormat(long time) {
+            SimpleDateFormat dateDF = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat timeDF = new SimpleDateFormat("HH:mm:ss.SSS");
+            dateDF.setTimeZone(TimeZone.getTimeZone("UTC"));
+            timeDF.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            return dateDF.format(time) + "T" + timeDF.format(time) + "Z";
+        }
 
     private Long duration(List list) {
         final String durationField = String.valueOf(list.get(4));

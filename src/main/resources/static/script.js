@@ -57,14 +57,56 @@ document.addEventListener('DOMContentLoaded', function () { // on dom ready
         }
     });
 
-    window.setInterval(function () {
+    // window.setInterval(function () {
+    //
+    //
+    //
+    //
+    //
+    // }, 5000);
 
-        $.get("/elements", function (data) {
+
+    var slider = $("#ex5").slider({});
+
+
+    range();
+    elements();
+
+    function elements(to) {
+        var uri;
+        if (to !== undefined) {
+            uri = "/elements?to=" + to.valueOf();
+        } else {
+            uri = "/elements?to=" + new Date().valueOf();
+        }
+        $.get(uri, function (data) {
             cy.elements().remove();
-            cy.add( data );
-            cy.layout({ name: 'cose' });
+            cy.add(data);
+            cy.layout({name: 'circle'});
         });
+    }
 
-    }, 5000);
+    function range() {
+        $.get("/range", function (data) {
+            var from = moment(new Date(data.from));
+            var to = moment(new Date(data.to));
+            var diffInHours = to.diff(from, 'minutes');
+
+            var mySlider = $("#ex5").slider({
+                min: 0,
+                max: diffInHours,
+                value: diffInHours,
+                formatter: function (value) {
+                    return moment(new Date(data.from)).add(value, 'm')
+                }
+            });
+
+            mySlider.on('slideStop', function (slideEvt) {
+                var selectedTo = moment(new Date(data.from)).add(slideEvt.value, 'm').toDate();
+                elements(selectedTo);
+            });
+        });
+    }
 
 }); // on dom ready
+
