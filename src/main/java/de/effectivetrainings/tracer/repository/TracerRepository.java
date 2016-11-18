@@ -16,6 +16,7 @@ public class TracerRepository {
 
     public static final String SELECT_ALL_GROUP_BY_TRACE_ID = "select traceId,source,target,\"duration\" from trace group by traceIdTag";
     public static final String SELECT_SERVICE_CONNECTIONS = "select source, target from trace where source != 'unknown' and target <> 'unknown' and time < '%s' and type = 'request_inbound'";
+    public static final String SELECT_DURATION = "select percentile(\"duration\",99),min(\"duration\"),max(\"duration\"),stddev(\"duration\"),mean(\"duration\"),median(\"duration\") from trace where source != 'unknown' and target != 'unknown' and type = 'response' group by sourceTag,targetTag";
 
     //workaround for https://github.com/influxdata/influxdb/issues/5793
     public static final String FIRST_ELEMENT = "select first(\"duration\") from trace";
