@@ -23,3 +23,15 @@ body {
 #ex1Slider .slider-selection {
 	background: #BABABA;
 }
+
+
+/**
+qtip
+**/
+.qtip-content {
+  width: 150px;
+  height: 150px;
+  box-sizing: border-box;
+  padding: 1em;
+  color: #000;
+}

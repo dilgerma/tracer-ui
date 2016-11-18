@@ -19,8 +19,4 @@ public class Trace {
     @NonNull
     private long duration;
 
-
-    public boolean isComplete() {
-        return !UNKNOWN_SOURCE_TARGET.equals(source) && !UNKNOWN_SOURCE_TARGET.equals(target);
-    }
 }

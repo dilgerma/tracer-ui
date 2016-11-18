@@ -4,6 +4,7 @@ import de.effectivetrainings.TracerUiApplication;
 import de.effectivetrainings.tracer.domain.ServiceCall;
 import de.effectivetrainings.tracer.domain.Span;
 import de.effectivetrainings.tracer.domain.TimeSpan;
+import de.effectivetrainings.tracer.domain.graph.InfluxQueryResult;
 import de.effectivetrainings.tracer.repository.TracerRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,7 +32,7 @@ public class TracerApplicationTest {
 
     @Test
     public void findCalls() {
-        final Set<ServiceCall> calls = tracerRepository.findCalls();
+        final Set<ServiceCall> calls = tracerRepository.findCalls(new Date());
         System.out.println(calls);
     }
 
@@ -38,5 +40,10 @@ public class TracerApplicationTest {
     public void findPeriod() {
         final Optional<TimeSpan> period = tracerRepository.findTimespan();
         System.out.println(period.get());
+    }
+
+    @Test
+    public void findCallDurations() {
+        final List<InfluxQueryResult> callDurations = tracerRepository.findCallDurations(new Date());
     }
 }

@@ -4,6 +4,10 @@ import de.effectivetrainings.tracer.domain.ServiceCall;
 import de.effectivetrainings.tracer.domain.Span;
 import de.effectivetrainings.tracer.domain.TimeSpan;
 import de.effectivetrainings.tracer.domain.Trace;
+import de.effectivetrainings.tracer.domain.graph.Edge;
+import de.effectivetrainings.tracer.domain.graph.InfluxQueryResult;
+import de.effectivetrainings.tracer.influx.InfluxResult;
+import de.effectivetrainings.tracer.influx.InfluxResultMapper;
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
@@ -15,8 +19,8 @@ import java.util.stream.Collectors;
 public class TracerRepository {
 
     public static final String SELECT_ALL_GROUP_BY_TRACE_ID = "select traceId,source,target,\"duration\" from trace group by traceIdTag";
-    public static final String SELECT_SERVICE_CONNECTIONS = "select source, target from trace where source != 'unknown' and target <> 'unknown' and time < '%s' and type = 'request_inbound'";
-    public static final String SELECT_DURATION = "select percentile(\"duration\",99),min(\"duration\"),max(\"duration\"),stddev(\"duration\"),mean(\"duration\"),median(\"duration\") from trace where source != 'unknown' and target != 'unknown' and type = 'response' group by sourceTag,targetTag";
+    public static final String SELECT_SERVICE_CONNECTIONS = "select source, target from trace where source != 'unknown' and target <> 'unknown' and time <= '%s' and type = 'request_inbound'";
+    public static final String SELECT_DURATION = "select percentile(\"duration\",99),min(\"duration\"),max(\"duration\"),stddev(\"duration\"),mean(\"duration\"),median(\"duration\") from trace where source != 'unknown' and target != 'unknown' and type = 'response' and time <= '%s' group by sourceTag,targetTag fill(0)";
 
     //workaround for https://github.com/influxdata/influxdb/issues/5793
     public static final String FIRST_ELEMENT = "select first(\"duration\") from trace";
@@ -24,6 +28,7 @@ public class TracerRepository {
 
     private InfluxDB influxDB;
     private String database;
+    private InfluxResultMapper influxResultMapper = new InfluxResultMapper();
 
     public TracerRepository(InfluxDB influxDB, String database) {
         this.influxDB = Objects.requireNonNull(influxDB);
@@ -66,6 +71,8 @@ public class TracerRepository {
                 .collect(Collectors.toSet());
     }
 
+
+
     public Optional<TimeSpan> findTimespan() {
         final QueryResult firstResult = influxDB.query(new Query(FIRST_ELEMENT, database));
         final QueryResult lastResult = influxDB.query(new Query(LAST_ELEMENT, database));
@@ -78,7 +85,17 @@ public class TracerRepository {
         }
     }
 
-    private Optional<Long> toTimeStamp(QueryResult firstResult) {
+    public List<InfluxQueryResult> findCallDurations(final Date to) {
+        final QueryResult query = influxDB.query(new Query(String.format(SELECT_DURATION, toInfluxDBTimeFormat(to.getTime())), database));
+
+        List<InfluxResult> result = influxResultMapper.mapSingleResult(query);
+        return result.stream().map(r -> {
+            Edge edge = new Edge(r.getTags().get("sourceTag"), r.getTags().get("targetTag"));
+            return InfluxQueryResult.builder().edge(edge).edgeData(r.getFields()).build();
+        }).collect(Collectors.toList());
+    }
+
+    private static Optional<Long> toTimeStamp(QueryResult firstResult) {
         return firstResult
                 .getResults()
                 .stream()
@@ -95,7 +112,7 @@ public class TracerRepository {
     }
 
     //TODO upgrade after influxdb-java 2.5 (TimeUtils)
-    public static long fromInfluxDBTimeFormat(String time) {
+    private static long fromInfluxDBTimeFormat(String time) {
         try {
             String[] parts = time.split("T");
             String datePart = parts[0];
